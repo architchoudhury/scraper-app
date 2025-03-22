@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Add New Response</h1>
+    
+    <form method="POST">
+        <div>
+            <label for="prompt">Prompt:</label>
+            <input type="text" id="prompt" name="prompt" required>
+        </div>
+        
+        <div>
+            <label for="response">Response:</label>
+            <textarea id="response" name="response" rows="5" required></textarea>
+        </div>
+        
+        <button type="submit">Submit</button>
+    </form>
+{% endblock %} 

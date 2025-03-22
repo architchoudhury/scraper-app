@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Prompt Responses</h1>
+    
+    {% if prompts %}
+        {% for prompt, items in prompts.items() %}
+            <div class="prompt-card">
+                <div class="prompt-title">{{ prompt }}</div>
+                
+                {% for item in items %}
+                    {% for response in item.responses %}
+                    <div class="response-item">
+                        <div>{{ response.text }}</div>
+                        <div class="timestamp">{{ response.timestamp }}</div>
+                    </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No prompts and responses found. <a href="/add">Add one</a>?</p>
+    {% endif %}
+{% endblock %} 
