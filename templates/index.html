@@ -1,22 +1,38 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Prompt Responses</h1>
-    
-    {% if prompts %}
-        {% for prompt, items in prompts.items() %}
-            <div class="prompt-card">
-                <div class="prompt-title">{{ prompt }}</div>
-                
-                {% for item in items %}
-                    <div class="response-item">
-                        <div>{{ item.response }}</div>
-                        <div class="timestamp">{{ item.timestamp }}</div>
-                    </div>
+<div class="container">
+    <div class="header">
+        <h1>Prompt Responses</h1>
+    </div>
+
+    <div class="prompts-container">
+        {% for prompt, responses in prompts.items() %}
+        <div class="prompt-group">
+            <div class="prompt-header" onclick="toggleResponses(this)">
+                <h2>{{ prompt }}</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="responses-container" style="display: none;">
+                {% for response in responses %}
+                <div class="response-item">
+                    <div class="response-content">{{ response.response }}</div>
+                    <div class="response-timestamp">{{ response.timestamp }}</div>
+                </div>
                 {% endfor %}
             </div>
+        </div>
         {% endfor %}
-    {% else %}
-        <p>No prompts and responses found. <a href="/add">Add one</a>?</p>
-    {% endif %}
+    </div>
+</div>
+
+<script>
+function toggleResponses(header) {
+    const container = header.nextElementSibling;
+    const icon = header.querySelector('.toggle-icon');
+    const isHidden = container.style.display === 'none';
+    container.style.display = isHidden ? 'block' : 'none';
+    icon.textContent = isHidden ? '▲' : '▼';
+}
+</script>
 {% endblock %} 

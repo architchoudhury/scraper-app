@@ -4,16 +4,20 @@
     <h1>Add New Response</h1>
     
     <form method="POST">
-        <div>
+        <div class="form-group">
             <label for="prompt">Prompt:</label>
-            <input type="text" id="prompt" name="prompt" required>
+            <input type="text" id="prompt" name="prompt" required 
+                   placeholder="Enter the prompt text (e.g., 'What is the capital of France?')">
+            <p class="form-hint">This is the question or request that was asked.</p>
         </div>
         
-        <div>
+        <div class="form-group">
             <label for="response">Response:</label>
-            <textarea id="response" name="response" rows="5" required></textarea>
+            <textarea id="response" name="response" rows="8" required
+                      placeholder="Enter the response text"></textarea>
+            <p class="form-hint">The full response to the prompt above.</p>
         </div>
         
-        <button type="submit">Submit</button>
+        <button type="submit">Save Response</button>
     </form>
 {% endblock %} 

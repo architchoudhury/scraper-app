@@ -31,7 +31,15 @@ def index():
         prompt = item.get('prompt', '')
         if prompt not in prompts:
             prompts[prompt] = []
-        prompts[prompt].append(item)
+        
+        # Get responses list
+        responses = item.get('responses', [])
+        for resp in responses:
+            response_item = {
+                'response': resp.get('text', ''),
+                'timestamp': resp.get('timestamp', '')
+            }
+            prompts[prompt].append(response_item)
     
     # Sort each group by timestamp
     for prompt, responses in prompts.items():
@@ -50,21 +58,32 @@ def add_entry():
         response_text = request.form.get('response')
         
         if prompt and response_text:
-            # Create item with timestamp
+            # Create timestamp for the new response
             timestamp = datetime.now().isoformat()
             
             try:
-                # Create new item
-                item = {
-                    'prompt': prompt,
-                    'response': response_text,
+                # Create new response object
+                new_response = {
+                    'text': response_text,
                     'timestamp': timestamp
                 }
                 
-                table.put_item(Item=item)
-                print(f"Successfully added item for prompt: {prompt}")
+                # Try to append to existing responses or create new item
+                table.update_item(
+                    Key={'prompt': prompt},
+                    UpdateExpression="SET responses = list_append(if_not_exists(responses, :empty_list), :newval), last_updated = :t",
+                    ExpressionAttributeValues={
+                        ':empty_list': [],
+                        ':newval': [new_response],
+                        ':t': timestamp
+                    }
+                )
+                print(f"Added response to prompt: {prompt}")
+                
             except Exception as e:
-                print(f"Error adding item: {e}")
+                print(f"Error: {e}")
+                import traceback
+                traceback.print_exc()
             
             return redirect(url_for('index'))
     
@@ -75,4 +94,4 @@ if __name__ == '__main__':
     os.makedirs('templates', exist_ok=True)
     os.makedirs('static', exist_ok=True)
     
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5001, debug=True)
