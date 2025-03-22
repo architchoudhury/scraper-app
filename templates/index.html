@@ -9,12 +9,10 @@
                 <div class="prompt-title">{{ prompt }}</div>
                 
                 {% for item in items %}
-                    {% for response in item.responses %}
                     <div class="response-item">
-                        <div>{{ response.text }}</div>
-                        <div class="timestamp">{{ response.timestamp }}</div>
+                        <div>{{ item.response }}</div>
+                        <div class="timestamp">{{ item.timestamp }}</div>
                     </div>
-                    {% endfor %}
                 {% endfor %}
             </div>
         {% endfor %}

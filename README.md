@@ -9,46 +9,17 @@ A simple Flask application that displays rows of data from DynamoDB, showing pro
    ```
    pip install -r requirements.txt
    ```
-3. Create a `.env` file based on `.env.example` with your AWS credentials and configuration
-4. Ensure your DynamoDB table exists with the following structure:
-   - Primary key: `id` (String)
-   - GSI: `PromptIndex` with partition key `prompt` (String)
-   - Other attributes: `responses` (List), `timestamp` (String)
+3. Create a `.env` file based on `.env.example` with your AWS region configuration (us-east-2)
+4. Ensure your AWS CLI is properly configured with credentials that have access to DynamoDB
 
-## DynamoDB Table Setup
+## DynamoDB Table Structure
 
-You can create the required DynamoDB table using the AWS CLI:
-
-```bash
-aws dynamodb create-table \
-    --table-name PromptResponses \
-    --attribute-definitions \
-        AttributeName=id,AttributeType=S \
-        AttributeName=prompt,AttributeType=S \
-    --key-schema \
-        AttributeName=id,KeyType=HASH \
-    --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 \
-    --global-secondary-indexes \
-        "[{\"IndexName\": \"PromptIndex\",\"KeySchema\": [{\"AttributeName\": \"prompt\",\"KeyType\": \"HASH\"}],\"Projection\": {\"ProjectionType\": \"ALL\"},\"ProvisionedThroughput\": {\"ReadCapacityUnits\": 5,\"WriteCapacityUnits\": 5}}]"
-```
-
-## Local Development with DynamoDB Local
-
-For local development, you can use DynamoDB Local:
-
-1. Download and run DynamoDB Local:
-   ```bash
-   docker run -p 8000:8000 amazon/dynamodb-local
-   ```
-
-2. Set `USE_LOCAL_DYNAMODB=True` in your `.env` file
-
-3. Run the mock data script to create the table and populate it with sample data:
-   ```bash
-   python mock_data.py
-   ```
-
-4. Run the application as usual
+The application expects a DynamoDB table named 'PromptResponses' with the following structure:
+- Each item contains:
+  - `prompt` (String): The prompt text
+  - `response` (String): The response text
+  - `timestamp` (String): ISO-formatted timestamp
+- Table should be in us-east-2 region
 
 ## Running the Application
 
